@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AVTOBAZAR PRO | Zamonaviy Mashinalar Oldi-Sotdi Desktop Platformasi</title>
+  <meta name="description" content="O'zbekistondagi eng ilg'or avtomobil oldi-sotdi va dilerlik desktop veb platformasi. Mashinalarni xarid qilish, sotish, AI narx baholash, lizing va kredit kalkulyatori hamda taqqoslash markazi.">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="desktop-app-body">
+
+  <!-- Desktop Window Frame / Header -->
+  <header class="app-topbar" id="app-topbar">
+    <div class="topbar-left">
+      <div class="brand-logo" id="brand-logo-btn">
+        <div class="logo-icon-wrap">
+          <i class="fa-solid fa-car-burst logo-turbo-icon"></i>
+          <span class="logo-pulse"></span>
+        </div>
+        <div class="logo-text">
+          <span class="logo-title">AVTOBAZAR<span class="logo-badge">PRO</span></span>
+          <span class="logo-subtitle">Desktop Dealership OS</span>
+        </div>
+      </div>
+
+      <div class="market-live-pill">
+        <span class="pulse-dot"></span>
+        <span class="market-text">Bozor: <strong>Faol (Live)</strong></span>
+      </div>
+
+      <div class="exchange-rate-widget" id="rate-toggle-btn" title="Valyuta kursini almashtirish">
+        <i class="fa-solid fa-money-bill-transfer"></i>
+        <span>1 USD = <strong id="live-rate-val">12,850</strong> UZS</span>
+        <span class="currency-switch-tag" id="currency-mode-tag">USD ($)</span>
+      </div>
+    </div>
+
+    <!-- Central Search Bar -->
+    <div class="topbar-center">
+      <div class="quick-search-box">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input type="text" id="global-search-input" placeholder="Marka, model yoki parametr bo'yicha tezkor qidiruv (masalan: Malibu, M5, BYD)...">
+        <button class="clear-search-btn" id="clear-search-btn" style="display:none;" title="Tozalash">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+        <span class="search-shortcut-badge">Ctrl + K</span>
+      </div>
+    </div>
+
+    <!-- Topbar Right Quick Actions -->
+    <div class="topbar-right">
+      <!-- Sound FX Toggle -->
+      <button class="topbar-btn audio-toggle-btn" id="sound-toggle-btn" title="Dvigatel tovushi va effektlarni yoqish/o'chirish">
+        <i class="fa-solid fa-volume-high" id="sound-icon"></i>
+        <span class="btn-caption">Ovoz</span>
+      </button>
+
+      <!-- Engine Rev Button -->
+      <button class="topbar-btn engine-start-btn" id="engine-rev-btn" title="Dvigatelni o't oldirish (Engine Start)">
+        <i class="fa-solid fa-bolt-lightning"></i>
+        <span>START</span>
+      </button>
+
+      <!-- Compare quick badge -->
+      <button class="topbar-btn nav-action-btn" id="quick-compare-btn" title="Taqqoslanayotgan mashinalar">
+        <i class="fa-solid fa-scale-balanced"></i>
+        <span class="badge-count" id="compare-count-badge">0</span>
+      </button>
+
+      <!-- Wishlist quick badge -->
+      <button class="topbar-btn nav-action-btn" id="quick-wishlist-btn" title="Sevimlilar ro'yxati">
+        <i class="fa-solid fa-heart"></i>
+        <span class="badge-count" id="wishlist-count-badge">0</span>
+      </button>
+
+      <!-- Add Listing CTA -->
+      <button class="btn-primary add-listing-btn" id="open-add-car-btn">
+        <i class="fa-solid fa-plus"></i>
+        <span>Mashina Sotish</span>
+      </button>
+
+      <!-- User Profile / Dealer Avatar -->
+      <div class="dealer-profile-pill" id="dealer-profile-btn" title="Diler profili">
+        <div class="dealer-avatar">
+          <i class="fa-solid fa-user-tie"></i>
+        </div>
+        <div class="dealer-info">
+          <span class="dealer-name">Toshkent Dilerlik</span>
+          <span class="dealer-status"><i class="fa-solid fa-circle-check"></i> Tasdiqlangan</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Desktop Layout Wrapper -->
+  <div class="desktop-shell">
+    
+    <!-- Left Navigation Sidebar -->
+    <aside class="desktop-sidebar" id="desktop-sidebar">
+      <div class="sidebar-menu-group">
+        <span class="sidebar-section-title">ASOSIY MENYU</span>
+        <button class="sidebar-nav-item active" data-view="marketplace" id="nav-marketplace">
+          <i class="fa-solid fa-store"></i>
+          <span>Bosh Bozor</span>
+          <span class="sidebar-badge" id="total-cars-badge">8</span>
+        </button>
+        <button class="sidebar-nav-item" data-view="sell-car" id="nav-sell-car">
+          <i class="fa-solid fa-hand-holding-dollar"></i>
+          <span>Mashina Sotish (E'lon)</span>
+          <span class="sidebar-badge new-badge">AI Narx</span>
+        </button>
+        <button class="sidebar-nav-item" data-view="dashboard" id="nav-dashboard">
+          <i class="fa-solid fa-chart-line"></i>
+          <span>Diler Boshqaruvi (CRM)</span>
+        </button>
+        <button class="sidebar-nav-item" data-view="calculator" id="nav-calculator">
+          <i class="fa-solid fa-calculator"></i>
+          <span>Kredit & Lizing Hisobi</span>
+        </button>
+        <button class="sidebar-nav-item" data-view="compare" id="nav-compare">
+          <i class="fa-solid fa-code-compare"></i>
+          <span>Mashinalarni Taqqoslash</span>
+          <span class="sidebar-badge" id="sidebar-compare-badge">0</span>
+        </button>
+        <button class="sidebar-nav-item" data-view="wishlist" id="nav-wishlist">
+          <i class="fa-solid fa-bookmark"></i>
+          <span>Saralangan Mashinalar</span>
+          <span class="sidebar-badge" id="sidebar-wishlist-badge">0</span>
+        </button>
+        <button class="sidebar-nav-item" data-view="deals-chat" id="nav-deals-chat">
+          <i class="fa-solid fa-comments-dollar"></i>
+          <span>Savdo Muzokaralari</span>
+          <span class="sidebar-badge pulse-badge">3</span>
+        </button>
+      </div>
+
+      <div class="sidebar-menu-group">
+        <span class="sidebar-section-title">TOIFALAR BO'YICHA</span>
+        <button class="sidebar-nav-item quick-cat-filter" data-category="electric">
+          <i class="fa-solid fa-charging-station"></i>
+          <span>Elektr & Gibrid (EV)</span>
+        </button>
+        <button class="sidebar-nav-item quick-cat-filter" data-category="luxury">
+          <i class="fa-solid fa-crown"></i>
+          <span>Hashamatli & Superkar</span>
+        </button>
+        <button class="sidebar-nav-item quick-cat-filter" data-category="national">
+          <i class="fa-solid fa-car-side"></i>
+          <span>Ommabop & Mahalliy</span>
+        </button>
+        <button class="sidebar-nav-item quick-cat-filter" data-category="suv">
+          <i class="fa-solid fa-truck-monster"></i>
+          <span>SUV & Krossoverlar</span>
+        </button>
+      </div>
+
+      <!-- Sidebar Mini Dealership Status Box -->
+      <div class="sidebar-summary-card">
+        <div class="summary-card-header">
+          <i class="fa-solid fa-shield-halved"></i>
+          <span>Bozor Kafolati</span>
+        </div>
+        <p class="summary-card-desc">Barcha avtomobillar 100% texnik va yuridik tekshiruvdan o'tgan.</p>
+        <div class="summary-stats-mini">
+          <div><small>Oylik bitimlar:</small> <strong>148+ ta</strong></div>
+          <div><small>Mijoz mamnuniyati:</small> <strong>99.4%</strong></div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Dynamic Content Workspace -->
+    <main class="desktop-workspace" id="desktop-workspace">
+
+      <!-- ================= 1. MARKETPLACE VIEW ================= -->
+      <section class="view-panel active" id="view-marketplace">
+        
+        <!-- Hero Spotlight Carousel / Showcase -->
+        <div class="marketplace-hero" id="marketplace-hero">
+          <div class="hero-overlay"></div>
+          <div class="hero-content">
+            <div class="hero-tag"><i class="fa-solid fa-fire"></i> PREMIUM BOZOR TANLOVI 2026</div>
+            <h1 class="hero-title">Mashinalar Olish Va Sotishning Eng Qulay Va Xavfsiz Desktop Tizimi</h1>
+            <p class="hero-desc">O'zbekistondagi eng mashhur modellar va eksklyuziv xorijiy superkarlar. AI narx baholash, lizing va tezkor savdo shartnomalari bir dasturda.</p>
+            <div class="hero-actions">
+              <button class="btn-primary" id="hero-explore-btn">
+                <i class="fa-solid fa-magnifying-glass"></i> Katalogga O'tish
+              </button>
+              <button class="btn-secondary" id="hero-sell-btn">
+                <i class="fa-solid fa-tag"></i> Mashinamni Sotish
+              </button>
+              <button class="btn-ghost" id="hero-calc-btn">
+                <i class="fa-solid fa-calculator"></i> Oylik To'lovni Hisoblash
+              </button>
+            </div>
+          </div>
+          <div class="hero-quick-stats">
+            <div class="h-stat-item">
+              <span class="h-stat-num" id="stat-total-listings">8</span>
+              <span class="h-stat-label">Faol E'lonlar</span>
+            </div>
+            <div class="h-stat-item">
+              <span class="h-stat-num">$1,450,000+</span>
+              <span class="h-stat-label">Bozor Portfeli</span>
+            </div>
+            <div class="h-stat-item">
+              <span class="h-stat-num">0%</span>
+              <span class="h-stat-label">Yashirin To'lovlar</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter & Control Bar -->
+        <div class="filter-dashboard-bar">
+          <div class="filter-primary-row">
+            
+            <!-- Brand selector -->
+            <div class="filter-field">
+              <label><i class="fa-solid fa-industry"></i> Marka:</label>
+              <select id="filter-brand" class="filter-select">
+                <option value="all">Barcha markalar</option>
+                <option value="Chevrolet">Chevrolet</option>
+                <option value="BMW">BMW</option>
+                <option value="BYD">BYD</option>
+                <option value="Mercedes-Benz">Mercedes-Benz</option>
+                <option value="Porsche">Porsche</option>
+                <option value="Tesla">Tesla</option>
+              </select>
+            </div>
+
+            <!-- Body Type -->
+            <div class="filter-field">
+              <label><i class="fa-solid fa-car"></i> Kuzov:</label>
+              <select id="filter-body" class="filter-select">
+                <option value="all">Barcha turlar</option>
+                <option value="Sedan">Sedan</option>
+                <option value="SUV">SUV / Krossover</option>
+                <option value="Kupe">Kupe / Superkar</option>
+              </select>
+            </div>
+
+            <!-- Fuel Type -->
+            <div class="filter-field">
+              <label><i class="fa-solid fa-gas-pump"></i> Yoqilg'i:</label>
+              <select id="filter-fuel" class="filter-select">
+                <option value="all">Barcha yoqilg'i</option>
+                <option value="Benzin">Benzin</option>
+                <option value="Elektr">Elektr (EV)</option>
+                <option value="Gibrid">Gibrid</option>
+              </select>
+            </div>
+
+            <!-- Max Price Filter -->
+            <div class="filter-field">
+              <label><i class="fa-solid fa-tag"></i> Maks. Narx: <span id="price-slider-label">$400,000</span></label>
+              <input type="range" id="filter-price-range" min="15000" max="400000" step="5000" value="400000" class="range-slider">
+            </div>
+
+            <!-- City Filter -->
+            <div class="filter-field">
+              <label><i class="fa-solid fa-location-dot"></i> Shahar:</label>
+              <select id="filter-city" class="filter-select">
+                <option value="all">Barcha shaharlar</option>
+                <option value="Toshkent">Toshkent</option>
+                <option value="Samarqand">Samarqand</option>
+                <option value="Buxoro">Buxoro</option>
+                <option value="Andijon">Andijon</option>
+              </select>
+            </div>
+
+            <!-- Sort By -->
+            <div class="filter-field">
+              <label><i class="fa-solid fa-arrow-down-short-wide"></i> Saralash:</label>
+              <select id="filter-sort" class="filter-select">
+                <option value="newest">Yangi qo'shilganlar</option>
+                <option value="price-asc">Narxi: Arzondan qimmatga</option>
+                <option value="price-desc">Narxi: Qimmatdan arzonga</option>
+                <option value="year-desc">Yili: Yangisidan eskisiga</option>
+                <option value="power-desc">Quvvati (HP) bo'yicha</option>
+              </select>
+            </div>
+
+            <div class="filter-actions-group">
+              <button class="btn-reset-filters" id="reset-filters-btn" title="Filtrlarni tozalash">
+                <i class="fa-solid fa-arrow-rotate-left"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Quick Category Badges Row -->
+          <div class="filter-tags-row">
+            <span class="tag-label">Tezkor toifalar:</span>
+            <button class="filter-chip active" data-chip="all">Barchasi</button>
+            <button class="filter-chip" data-chip="new">Yangi (0 km)</button>
+            <button class="filter-chip" data-chip="electric">Elektr avtomobillar</button>
+            <button class="filter-chip" data-chip="national">Mahalliy (Chevrolet)</button>
+            <button class="filter-chip" data-chip="luxury">Hashamatli & Sport</button>
+            <button class="filter-chip" data-chip="suv">SUV & Krossover</button>
+            
+            <div class="results-count-wrapper">
+              Natija: <strong id="filter-results-count">8</strong> ta avtomobil topildi
+            </div>
+          </div>
+        </div>
+
+        <!-- Car Listings Grid Container -->
+        <div class="cars-grid" id="cars-grid">
+          <!-- Dynamically Rendered Cars -->
+        </div>
+
+        <!-- Empty State (if filter yields 0) -->
+        <div class="empty-state" id="empty-cars-state" style="display:none;">
+          <div class="empty-icon"><i class="fa-solid fa-car-tunnel"></i></div>
+          <h3>Mos keluvchi avtomobil topilmadi</h3>
+          <p>Filtrlarni o'zgartiring yoki qidiruv so'zini qisqartiring.</p>
+          <button class="btn-primary" id="empty-reset-btn">Barcha filtrlarni tozalash</button>
+        </div>
+
+      </section>
+
+      <!-- ================= 2. SELL CAR (MASHINA SOTISH & AI NARX) ================= -->
+      <section class="view-panel" id="view-sell-car">
+        <div class="panel-header">
+          <div>
+            <h2 class="panel-title"><i class="fa-solid fa-plus-circle"></i> Mashinangizni Sotuvga Qo'ying</h2>
+            <p class="panel-subtitle">Bir necha daqiqada e'lon bering. Sun'iy intellekt (AI) orqali mashinangizning real bozor bahosini bilib oling.</p>
+          </div>
+          <div class="ai-badge-header">
+            <i class="fa-solid fa-brain"></i> AI Bozor Tahlili Faol
+          </div>
+        </div>
+
+        <div class="sell-car-grid">
+          <!-- Sell Form -->
+          <form class="sell-car-form glass-card" id="sell-car-form">
+            <div class="form-section-title">
+              <i class="fa-solid fa-car"></i> 1. Avtomobil Ma'lumotlari
+            </div>
+
+            <div class="form-row two-col">
+              <div class="form-group">
+                <label for="form-car-brand">Marka *</label>
+                <select id="form-car-brand" required class="form-input">
+                  <option value="">Tanlang...</option>
+                  <option value="Chevrolet">Chevrolet</option>
+                  <option value="BYD">BYD</option>
+                  <option value="BMW">BMW</option>
+                  <option value="Mercedes-Benz">Mercedes-Benz</option>
+                  <option value="Porsche">Porsche</option>
+                  <option value="Tesla">Tesla</option>
+                  <option value="Hyundai">Hyundai</option>
+                  <option value="Kia">Kia</option>
+                  <option value="Toyota">Toyota</option>
+                  <option value="Boshqa">Boshqa marka</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="form-car-model">Model va Komplektatsiya *</label>
+                <input type="text" id="form-car-model" required class="form-input" placeholder="Masalan: Malibu 2 Premier yoki Song Plus EV">
+              </div>
+            </div>
+
+            <div class="form-row three-col">
+              <div class="form-group">
+                <label for="form-car-year">Ishlab chiqarilgan yili *</label>
+                <input type="number" id="form-car-year" min="2000" max="2026" value="2023" required class="form-input">
+              </div>
+              <div class="form-group">
+                <label for="form-car-body">Kuzov turi *</label>
+                <select id="form-car-body" required class="form-input">
+                  <option value="Sedan">Sedan</option>
+                  <option value="SUV">SUV / Krossover</option>
+                  <option value="Kupe">Kupe</option>
+                  <option value="Xetchbek">Xetchbek</option>
+                  <option value="Pikap">Pikap</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="form-car-mileage">Probeg (Yurgan masofasi, km) *</label>
+                <input type="number" id="form-car-mileage" min="0" value="15000" required class="form-input" placeholder="Masalan: 25000">
+              </div>
+            </div>
+
+            <div class="form-row three-col">
+              <div class="form-group">
+                <label for="form-car-fuel">Yoqilg'i turi *</label>
+                <select id="form-car-fuel" required class="form-input">
+                  <option value="Benzin">Benzin</option>
+                  <option value="Elektr">Elektr (EV)</option>
+                  <option value="Gibrid">Gibrid</option>
+                  <option value="Dizel">Dizel</option>
+                  <option value="Metan/Propan">Gaz (Metan/Propan)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="form-car-transmission">Uzatma qutisi (Karobka) *</label>
+                <select id="form-car-transmission" required class="form-input">
+                  <option value="Avtomat">Avtomat</option>
+                  <option value="Mexanika">Mexanika</option>
+                  <option value="Reduktor / EV">Reduktor (Elektr)</option>
+                  <option value="Robot">Robot</option>
+                  <option value="Variator">Variator (CVT)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="form-car-power">Ot kuchi (HP)</label>
+                <input type="number" id="form-car-power" value="250" class="form-input" placeholder="Masalan: 250 HP">
+              </div>
+            </div>
+
+            <div class="form-section-title">
+              <i class="fa-solid fa-dollar-sign"></i> 2. Narx Va Rasmlar
+            </div>
+
+            <div class="form-row two-col">
+              <div class="form-group">
+                <label for="form-car-price">Sotish narxi ($ USD) *</label>
+                <input type="number" id="form-car-price" min="1000" value="28000" required class="form-input" placeholder="Masalan: 28000">
+                <small class="hint-text">So'mda: taxminan <strong id="form-price-uzs-hint">359,800,000</strong> UZS</small>
+              </div>
+              <div class="form-group">
+                <label for="form-car-city">Joylashgan shahar *</label>
+                <select id="form-car-city" required class="form-input">
+                  <option value="Toshkent">Toshkent</option>
+                  <option value="Samarqand">Samarqand</option>
+                  <option value="Buxoro">Buxoro</option>
+                  <option value="Andijon">Andijon</option>
+                  <option value="Farg'ona">Farg'ona</option>
+                  <option value="Namangan">Namangan</option>
+                  <option value="Qarshi">Qarshi</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Image selection / Preset or URL -->
+            <div class="form-group">
+              <label>Avtomobil fotosurati:</label>
+              <div class="image-preset-picker">
+                <div class="preset-option active" data-img="assets/images/chevrolet_malibu.png">
+                  <img src="assets/images/chevrolet_malibu.png" alt="Malibu">
+                  <span>Malibu</span>
+                </div>
+                <div class="preset-option" data-img="assets/images/chevrolet_tracker.png">
+                  <img src="assets/images/chevrolet_tracker.png" alt="Tracker">
+                  <span>Tracker</span>
+                </div>
+                <div class="preset-option" data-img="assets/images/chevrolet_tahoe.png">
+                  <img src="assets/images/chevrolet_tahoe.png" alt="Tahoe">
+                  <span>Tahoe</span>
+                </div>
+                <div class="preset-option" data-img="assets/images/byd_song_plus.png">
+                  <img src="assets/images/byd_song_plus.png" alt="BYD">
+                  <span>BYD Song</span>
+                </div>
+                <div class="preset-option" data-img="assets/images/bmw_m5.png">
+                  <img src="assets/images/bmw_m5.png" alt="BMW">
+                  <span>BMW M5</span>
+                </div>
+                <div class="preset-option" data-img="assets/images/mercedes_amg.png">
+                  <img src="assets/images/mercedes_amg.png" alt="Mercedes">
+                  <span>Mercedes</span>
+                </div>
+                <div class="preset-option" data-img="assets/images/porsche_gt3.png">
+                  <img src="assets/images/porsche_gt3.png" alt="Porsche">
+                  <span>Porsche</span>
+                </div>
+                <div class="preset-option" data-img="assets/images/tesla_model_s.png">
+                  <img src="assets/images/tesla_model_s.png" alt="Tesla">
+                  <span>Tesla</span>
+                </div>
+              </div>
+              <div class="custom-url-input-wrap">
+                <input type="text" id="form-car-image-url" class="form-input" placeholder="Yoki rasm havolasini (URL) kiriting...">
+              </div>
+            </div>
+
+            <div class="form-row two-col">
+              <div class="form-group">
+                <label for="form-seller-phone">Aloqa uchun telefon *</label>
+                <input type="text" id="form-seller-phone" required class="form-input" value="+998 90 123 45 67">
+              </div>
+              <div class="form-group">
+                <label for="form-seller-name">Sotuvchi ismi / Dilerlik *</label>
+                <input type="text" id="form-seller-name" required class="form-input" value="Sardor Avto Deal">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="form-car-desc">Qo'shimcha ta'rif va holati</label>
+              <textarea id="form-car-desc" rows="3" class="form-input" placeholder="Mashina kraskasi toza, yangi balonlar, kruiz nazorati, garajda saqlangan..."></textarea>
+            </div>
+
+            <div class="form-submit-row">
+              <button type="submit" class="btn-primary btn-large" id="submit-car-listing-btn">
+                <i class="fa-solid fa-cloud-arrow-up"></i> E'lonni Bozorda E'lon Qilish
+              </button>
+            </div>
+          </form>
+
+          <!-- AI Price Estimator Card (Live dynamic valuation) -->
+          <div class="ai-estimator-sidebar glass-card">
+            <div class="estimator-header">
+              <div class="ai-orb">
+                <i class="fa-solid fa-microchip"></i>
+              </div>
+              <div>
+                <h3>AI Bozor Baholovchisi</h3>
+                <small>Bozor narxlari tahlilchisi v2.4</small>
+              </div>
+            </div>
+
+            <div class="estimator-body">
+              <p class="estimator-info-text">Formada kiritilgan ma'lumotlar asosida O'zbekiston avtobozoridagi hozirgi talab va taklif dinamikasi avtomatik hisoblanmoqda.</p>
+
+              <div class="ai-valuation-box">
+                <span class="val-title">Tavsiya etilgan bozor narxi:</span>
+                <div class="val-price" id="ai-est-price">$27,500 - $29,200</div>
+                <div class="val-uzs" id="ai-est-uzs">~ 353,000,000 - 375,000,000 UZS</div>
+              </div>
+
+              <div class="valuation-indicators">
+                <div class="ind-item">
+                  <div class="ind-label">
+                    <span>Sotilish ehtimoli (30 kun ichida):</span>
+                    <strong id="ai-sell-chance">92%</strong>
+                  </div>
+                  <div class="progress-bar-wrap">
+                    <div class="progress-fill" id="ai-sell-progress" style="width: 92%;"></div>
+                  </div>
+                </div>
+
+                <div class="ind-item">
+                  <div class="ind-label">
+                    <span>Bozor talabi darajasi:</span>
+                    <strong class="text-success" id="ai-demand-level">Yuqori (Trend)</strong>
+                  </div>
+                </div>
+
+                <div class="ind-item">
+                  <div class="ind-label">
+                    <span>Amortizatsiya / Yillik qiymat yo'qotishi:</span>
+                    <strong id="ai-depreciation-rate">~4.8%</strong>
+                  </div>
+                </div>
+              </div>
+
+              <div class="ai-tips-card">
+                <div class="tip-icon"><i class="fa-solid fa-lightbulb"></i></div>
+                <div class="tip-content">
+                  <strong>AI Tavsiyasi:</strong>
+                  <p id="ai-recommendation-text">Ushbu narx oralig'ida mashinangiz 1-2 hafta ichida xaridorni topadi. Yuqori sifatli fotosuratlar va batafsil tavsif sotuvni 40% ga tezlashtiradi.</p>
+                </div>
+              </div>
+
+              <button class="btn-secondary btn-full" id="apply-ai-price-btn">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> AI Tavsiya Narxini Qo'llash
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 3. DEALER DASHBOARD & CRM ================= -->
+      <section class="view-panel" id="view-dashboard">
+        <div class="panel-header">
+          <div>
+            <h2 class="panel-title"><i class="fa-solid fa-chart-pie"></i> Dilerlik Boshqaruv Markazi (CRM)</h2>
+            <p class="panel-subtitle">Savdo ko'rsatkichlari, aylanma mablag'lar, e'lonlar statistikasi va bitimlar monitoringi.</p>
+          </div>
+          <button class="btn-primary" id="dash-add-car-btn">
+            <i class="fa-solid fa-plus"></i> Yangi Mashina Qo'shish
+          </button>
+        </div>
+
+        <!-- CRM Metrics Overview Cards -->
+        <div class="crm-metrics-grid">
+          <div class="metric-card glass-card">
+            <div class="metric-icon-wrap icon-cyan">
+              <i class="fa-solid fa-warehouse"></i>
+            </div>
+            <div class="metric-content">
+              <span class="m-label">Jami Parkdagi Mashinalar</span>
+              <div class="m-value" id="crm-total-cars">8 ta</div>
+              <span class="m-sub text-success"><i class="fa-solid fa-arrow-trend-up"></i> +2 ta bu hafta</span>
+            </div>
+          </div>
+
+          <div class="metric-card glass-card">
+            <div class="metric-icon-wrap icon-gold">
+              <i class="fa-solid fa-vault"></i>
+            </div>
+            <div class="metric-content">
+              <span class="m-label">Umumiy Portfel Qiymati</span>
+              <div class="m-value" id="crm-total-valuation">$704,400</div>
+              <span class="m-sub" id="crm-total-valuation-uzs">~ 9,051,540,000 UZS</span>
+            </div>
+          </div>
+
+          <div class="metric-card glass-card">
+            <div class="metric-icon-wrap icon-emerald">
+              <i class="fa-solid fa-handshake-simple"></i>
+            </div>
+            <div class="metric-content">
+              <span class="m-label">Sotilgan Mashinalar</span>
+              <div class="m-value" id="crm-sold-count">14 ta</div>
+              <span class="m-sub text-success"><i class="fa-solid fa-circle-check"></i> Jami daromad: $382,000</span>
+            </div>
+          </div>
+
+          <div class="metric-card glass-card">
+            <div class="metric-icon-wrap icon-purple">
+              <i class="fa-solid fa-users-viewfinder"></i>
+            </div>
+            <div class="metric-content">
+              <span class="m-label">Faol Xaridorlar So'rovi</span>
+              <div class="m-value" id="crm-active-leads">27 ta</div>
+              <span class="m-sub text-info"><i class="fa-solid fa-bell"></i> 5 ta yangi taklif</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Deals Pipeline (Kanban-style) & Management Table -->
+        <div class="crm-tabs-wrap">
+          <div class="crm-tabs-header">
+            <button class="crm-tab active" data-tab="inventory">Barcha Mashinalar Ro'yxati</button>
+            <button class="crm-tab" data-tab="pipeline">Bitimlar Voronkasi (Pipeline)</button>
+            <button class="crm-tab" data-tab="analytics">Savdo Grafigi</button>
+          </div>
+
+          <!-- Inventory Tab -->
+          <div class="crm-tab-content active" id="crm-tab-inventory">
+            <div class="table-container glass-card">
+              <table class="desktop-table" id="crm-inventory-table">
+                <thead>
+                  <tr>
+                    <th>Avtomobil</th>
+                    <th>Yili & Kuzov</th>
+                    <th>Probeg</th>
+                    <th>Narx ($ / UZS)</th>
+                    <th>Holati</th>
+                    <th>Shahar</th>
+                    <th>Amallar</th>
+                  </tr>
+                </thead>
+                <tbody id="crm-inventory-tbody">
+                  <!-- Rendered dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Pipeline Tab -->
+          <div class="crm-tab-content" id="crm-tab-pipeline" style="display:none;">
+            <div class="pipeline-kanban">
+              <!-- Stage 1 -->
+              <div class="pipeline-column">
+                <div class="column-header">
+                  <span>Yangi So'rovlar</span>
+                  <span class="col-count">3</span>
+                </div>
+                <div class="pipeline-cards">
+                  <div class="kanban-card">
+                    <strong>Chevrolet Tracker RS</strong>
+                    <div class="kanban-sub">Mijoz: Bekzod A. | $19,500 taklif qildi</div>
+                    <span class="kanban-tag">Telefon orqali</span>
+                  </div>
+                  <div class="kanban-card">
+                    <strong>BYD Song Plus EV</strong>
+                    <div class="kanban-sub">Mijoz: Jamshid K. | Test-drayv so'radi</div>
+                    <span class="kanban-tag tag-blue">Test-drayv</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Stage 2 -->
+              <div class="pipeline-column">
+                <div class="column-header">
+                  <span>Muzokarada / Ko'rik</span>
+                  <span class="col-count">2</span>
+                </div>
+                <div class="pipeline-cards">
+                  <div class="kanban-card">
+                    <strong>BMW M5 Competition</strong>
+                    <div class="kanban-sub">Mijoz: Alisher N. | $112,000 savdo bormoqda</div>
+                    <span class="kanban-tag tag-warning">Narx tortishuvi</span>
+                  </div>
+                  <div class="kanban-card">
+                    <strong>Chevrolet Malibu 2</strong>
+                    <div class="kanban-sub">Mijoz: Dilshod T. | Kredit rasmiylashtiruvi</div>
+                    <span class="kanban-tag tag-blue">Bank arizasi</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Stage 3 -->
+              <div class="pipeline-column">
+                <div class="column-header">
+                  <span>Bron Qilingan</span>
+                  <span class="col-count">1</span>
+                </div>
+                <div class="pipeline-cards">
+                  <div class="kanban-card">
+                    <strong>Chevrolet Tahoe V8</strong>
+                    <div class="kanban-sub">Zakalat olindi: $2,000 | Notarius tayyorlanmoqda</div>
+                    <span class="kanban-tag tag-success">Zakalat to'langan</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Stage 4 -->
+              <div class="pipeline-column">
+                <div class="column-header">
+                  <span>Sotildi & Topshirildi</span>
+                  <span class="col-count">4</span>
+                </div>
+                <div class="pipeline-cards">
+                  <div class="kanban-card">
+                    <strong>Porsche 911 GT3 RS</strong>
+                    <div class="kanban-sub">Muvaffaqiyatli yakunlandi: $340,000</div>
+                    <span class="kanban-tag tag-success">Muvaffaqiyatli</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Analytics Tab -->
+          <div class="crm-tab-content" id="crm-tab-analytics" style="display:none;">
+            <div class="analytics-showcase glass-card">
+              <h3>2026-yilgi Oylik Savdo Ko'rsatkichlari</h3>
+              <div class="bar-chart-mock">
+                <div class="chart-col"><div class="bar-fill" style="height: 45%;"></div><span>Yan</span><small>$120k</small></div>
+                <div class="chart-col"><div class="bar-fill" style="height: 60%;"></div><span>Fev</span><small>$180k</small></div>
+                <div class="chart-col"><div class="bar-fill" style="height: 75%;"></div><span>Mar</span><small>$240k</small></div>
+                <div class="chart-col"><div class="bar-fill" style="height: 90%;"></div><span>Apr</span><small>$310k</small></div>
+                <div class="chart-col"><div class="bar-fill" style="height: 65%;"></div><span>May</span><small>$210k</small></div>
+                <div class="chart-col"><div class="bar-fill active" style="height: 100%;"></div><span>Hozir</span><small>$382k</small></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 4. AUTO FINANCE / LOAN CALCULATOR ================= -->
+      <section class="view-panel" id="view-calculator">
+        <div class="panel-header">
+          <div>
+            <h2 class="panel-title"><i class="fa-solid fa-calculator"></i> Avtokredit Va Lizing Kalkulyatori</h2>
+            <p class="panel-subtitle">Dastlabki to'lov, muddat va yillik foiz stavkasi asosida oylik to'lovni hisoblang.</p>
+          </div>
+          <div class="calc-bank-badge">
+            <i class="fa-solid fa-building-columns"></i> Hamkor Banklar: 6 ta
+          </div>
+        </div>
+
+        <div class="calculator-grid">
+          <!-- Inputs Card -->
+          <div class="calc-inputs-card glass-card">
+            
+            <!-- Quick Car Preset Picker -->
+            <div class="form-group">
+              <label for="calc-select-car"><i class="fa-solid fa-car-side"></i> Hisoblash uchun avtomobilni tanlang:</label>
+              <select id="calc-select-car" class="form-input">
+                <!-- Dynamically populated -->
+              </select>
+            </div>
+
+            <!-- Total Price Input -->
+            <div class="form-group">
+              <div class="label-with-val">
+                <label for="calc-price-input">Avtomobil Narxi ($ USD):</label>
+                <span class="highlight-val" id="calc-price-display">$28,900</span>
+              </div>
+              <input type="number" id="calc-price-input" min="5000" max="500000" step="500" value="28900" class="form-input">
+            </div>
+
+            <!-- Down Payment Slider -->
+            <div class="form-group">
+              <div class="label-with-val">
+                <label>Dastlabki To'lov:</label>
+                <span class="highlight-val" id="calc-down-display">30% ($8,670)</span>
+              </div>
+              <input type="range" id="calc-down-slider" min="15" max="70" step="5" value="30" class="range-slider">
+              <div class="range-marks">
+                <span>15%</span>
+                <span>30%</span>
+                <span>50%</span>
+                <span>70%</span>
+              </div>
+            </div>
+
+            <!-- Loan Term Slider -->
+            <div class="form-group">
+              <div class="label-with-val">
+                <label>Kredit / Lizing Muddati:</label>
+                <span class="highlight-val" id="calc-term-display">36 oy (3 yil)</span>
+              </div>
+              <input type="range" id="calc-term-slider" min="12" max="60" step="6" value="36" class="range-slider">
+              <div class="range-marks">
+                <span>12 oy</span>
+                <span>24 oy</span>
+                <span>36 oy</span>
+                <span>48 oy</span>
+                <span>60 oy</span>
+              </div>
+            </div>
+
+            <!-- Annual Interest Rate -->
+            <div class="form-group">
+              <div class="label-with-val">
+                <label>Yillik Foiz Stavkasi (%):</label>
+                <span class="highlight-val" id="calc-rate-display">20%</span>
+              </div>
+              <input type="range" id="calc-rate-slider" min="12" max="30" step="1" value="20" class="range-slider">
+              <div class="range-marks">
+                <span>12% (Lizing)</span>
+                <span>20% (Standart)</span>
+                <span>30%</span>
+              </div>
+            </div>
+
+            <!-- Loan Type Radio -->
+            <div class="form-group">
+              <label>Moliya turi:</label>
+              <div class="radio-pill-group">
+                <label class="radio-pill active">
+                  <input type="radio" name="finance-type" value="credit" checked>
+                  <span>Bank Avtokrediti</span>
+                </label>
+                <label class="radio-pill">
+                  <input type="radio" name="finance-type" value="leasing">
+                  <span>Kompaniya Lizingi</span>
+                </label>
+                <label class="radio-pill">
+                  <input type="radio" name="finance-type" value="halal">
+                  <span>Halol Muddatli To'lov (Murobaha)</span>
+                </label>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Calculation Results Dashboard -->
+          <div class="calc-results-card glass-card">
+            <div class="results-header">
+              <span class="res-badge">HISOBLANGAN TO'LOV REJASI</span>
+              <h3>Oylik To'lov Miqdori</h3>
+              <div class="monthly-payment-hero" id="calc-monthly-val">
+                $752 <small>/ oyiga</small>
+              </div>
+              <div class="monthly-uzs-val" id="calc-monthly-uzs">
+                ~ 9,663,200 UZS / oyiga
+              </div>
+            </div>
+
+            <div class="breakdown-list">
+              <div class="breakdown-item">
+                <span><i class="fa-solid fa-coins"></i> Qarzga olinadigan asosiy summa:</span>
+                <strong id="calc-loan-principal">$20,230</strong>
+              </div>
+              <div class="breakdown-item">
+                <span><i class="fa-solid fa-money-bill-wave"></i> Dastlabki to'lov summasi:</span>
+                <strong id="calc-down-sum">$8,670</strong>
+              </div>
+              <div class="breakdown-item">
+                <span><i class="fa-solid fa-percent"></i> Jami hisoblangan foiz summasi:</span>
+                <strong class="text-warning" id="calc-total-interest">$6,840</strong>
+              </div>
+              <div class="breakdown-item total-highlight">
+                <span><i class="fa-solid fa-receipt"></i> Umumiy to'lanadigan summa:</span>
+                <strong class="text-cyan" id="calc-grand-total">$35,740</strong>
+              </div>
+            </div>
+
+            <!-- Visual Bar -->
+            <div class="payment-share-bar">
+              <div class="share-principal" id="bar-principal" style="width: 75%;" title="Asosiy qarz"></div>
+              <div class="share-interest" id="bar-interest" style="width: 25%;" title="Foiz summasi"></div>
+            </div>
+            <div class="share-legend">
+              <span><span class="legend-dot dot-principal"></span> Asosiy qarz (<strong id="share-principal-pct">75%</strong>)</span>
+              <span><span class="legend-dot dot-interest"></span> Foizlar (<strong id="share-interest-pct">25%</strong>)</span>
+            </div>
+
+            <button class="btn-primary btn-full mt-4" id="apply-finance-btn">
+              <i class="fa-solid fa-file-signature"></i> Kreditga Onlayn Ariza Yuborish
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 5. CAR COMPARISON TOOL ================= -->
+      <section class="view-panel" id="view-compare">
+        <div class="panel-header">
+          <div>
+            <h2 class="panel-title"><i class="fa-solid fa-code-compare"></i> Mashinalarni Yonma-Yon Taqqoslash</h2>
+            <p class="panel-subtitle">2 tadan 3 tagacha avtomobilni texnik xususiyatlari, narxi va tezlanishi bo'yicha solishtiring.</p>
+          </div>
+          <button class="btn-secondary" id="clear-compare-btn">
+            <i class="fa-solid fa-trash-can"></i> Ro'yxatni Tozalash
+          </button>
+        </div>
+
+        <div class="compare-container" id="compare-container">
+          <!-- Rendered dynamically -->
+        </div>
+      </section>
+
+      <!-- ================= 6. WISHLIST / SARALANGANLAR ================= -->
+      <section class="view-panel" id="view-wishlist">
+        <div class="panel-header">
+          <div>
+            <h2 class="panel-title"><i class="fa-solid fa-bookmark"></i> Saralangan Mashinalar (Sevimlilar)</h2>
+            <p class="panel-subtitle">Sizga yoqqan va keyinroq ko'rish uchun saqlab qo'yilgan mashinalar ro'yxati.</p>
+          </div>
+        </div>
+
+        <div class="cars-grid" id="wishlist-grid">
+          <!-- Dynamically populated -->
+        </div>
+
+        <div class="empty-state" id="empty-wishlist-state" style="display:none;">
+          <div class="empty-icon"><i class="fa-regular fa-heart"></i></div>
+          <h3>Siz hali hech qanday mashinani saqlamadingiz</h3>
+          <p>Katalogdagi yurakcha tugmasini bosib o'zingizga yoqqan mashinalarni bu yerga to'plang.</p>
+          <button class="btn-primary" id="wishlist-go-market-btn">Katalogga O'tish</button>
+        </div>
+      </section>
+
+      <!-- ================= 7. DEALS NEGOTIATION CHAT ================= -->
+      <section class="view-panel" id="view-deals-chat">
+        <div class="panel-header">
+          <div>
+            <h2 class="panel-title"><i class="fa-solid fa-comments-dollar"></i> Savdo Muzokaralari & Xabarlar</h2>
+            <p class="panel-subtitle">Xaridorlar va dilerlar o'rtasida narx savdolashish va shartnoma suhbati.</p>
+          </div>
+        </div>
+
+        <div class="chat-desktop-shell glass-card">
+          <!-- Chat sidebar / Conversations list -->
+          <div class="chat-users-list" id="chat-threads-list">
+            <div class="chat-thread-item active" data-thread="1">
+              <div class="thread-avatar">
+                <i class="fa-solid fa-user"></i>
+              </div>
+              <div class="thread-info">
+                <div class="thread-top">
+                  <strong>Farrux Qodirov</strong>
+                  <small>12:20</small>
+                </div>
+                <div class="thread-car-tag">BMW M5 Competition</div>
+                <p class="thread-preview">Salom, $110,000 naqd to'lasam bera olasizmi?</p>
+              </div>
+            </div>
+
+            <div class="chat-thread-item" data-thread="2">
+              <div class="thread-avatar">
+                <i class="fa-solid fa-user"></i>
+              </div>
+              <div class="thread-info">
+                <div class="thread-top">
+                  <strong>Akmal Zokirov</strong>
+                  <small>Kecha</small>
+                </div>
+                <div class="thread-car-tag">BYD Song Plus EV</div>
+                <p class="thread-preview">Mashinaning zaryadka stansiyasi ham bormi?</p>
+              </div>
+            </div>
+
+            <div class="chat-thread-item" data-thread="3">
+              <div class="thread-avatar">
+                <i class="fa-solid fa-user"></i>
+              </div>
+              <div class="thread-info">
+                <div class="thread-top">
+                  <strong>Nodirbek</strong>
+                  <small>10 Okt</small>
+                </div>
+                <div class="thread-car-tag">Chevrolet Malibu 2</div>
+                <p class="thread-preview">Ertaga soat 15:00 da ko'rsak bo'ladimi?</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chat active conversation window -->
+          <div class="chat-messages-area">
+            <div class="chat-header-bar">
+              <div class="active-chat-user">
+                <div class="thread-avatar"><i class="fa-solid fa-user"></i></div>
+                <div>
+                  <h4 id="chat-active-name">Farrux Qodirov</h4>
+                  <small id="chat-active-subject"><i class="fa-solid fa-car"></i> BMW M5 Competition bo'yicha savdo</small>
+                </div>
+              </div>
+
+              <div class="chat-quick-actions">
+                <button class="btn-secondary btn-sm" id="chat-make-counter-btn">
+                  <i class="fa-solid fa-handshake"></i> Qarshi Narx Taklifi
+                </button>
+                <button class="btn-primary btn-sm" id="chat-confirm-deal-btn">
+                  <i class="fa-solid fa-check"></i> Bitimni Qabul Qilish
+                </button>
+              </div>
+            </div>
+
+            <div class="chat-messages-body" id="chat-messages-body">
+              <div class="message incoming">
+                <div class="msg-bubble">
+                  <p>Assalomu alaykum! BMW M5 Competition 2023 bo'yicha murojaat qilayotgandim.</p>
+                  <span class="msg-time">12:15</span>
+                </div>
+              </div>
+              <div class="message outgoing">
+                <div class="msg-bubble">
+                  <p>Va alaykum assalom! Mashina ideal holatda, to'liq zavod boyoq, garajda saqlangan. Qanday savollaringiz bor?</p>
+                  <span class="msg-time">12:18</span>
+                </div>
+              </div>
+              <div class="message incoming">
+                <div class="msg-bubble offer-bubble">
+                  <div class="offer-title"><i class="fa-solid fa-tag"></i> Xaridor Narx Taklifi:</div>
+                  <div class="offer-amount">$112,000</div>
+                  <p>Agar rozi bo'lsangiz, ertaga notariusda to'liq rasmiylashtirib olaman.</p>
+                  <span class="msg-time">12:20</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="chat-input-bar">
+              <input type="text" id="chat-text-input" placeholder="Javob yozing yoki narx taklif qiling...">
+              <button class="btn-primary" id="chat-send-btn">
+                <i class="fa-solid fa-paper-plane"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ================= CAR DETAILS MODAL ================= -->
+  <div class="modal-overlay" id="car-details-modal" style="display:none;">
+    <div class="modal-window glass-card" id="modal-window-details">
+      <button class="modal-close-btn" id="modal-close-details-btn"><i class="fa-solid fa-xmark"></i></button>
+
+      <div class="car-modal-layout" id="car-modal-content">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= TEST DRIVE BOOKING MODAL ================= -->
+  <div class="modal-overlay" id="test-drive-modal" style="display:none;">
+    <div class="modal-window glass-card modal-compact">
+      <button class="modal-close-btn" id="modal-close-test-btn"><i class="fa-solid fa-xmark"></i></button>
+
+      <div class="modal-header-compact">
+        <i class="fa-solid fa-gauge-high"></i>
+        <h3>Test-Drayv Buyurtma Qilish</h3>
+        <p id="test-drive-car-name">Tanlangan mashina</p>
+      </div>
+
+      <form class="modal-form" id="test-drive-form">
+        <div class="form-group">
+          <label for="td-user-name">Ismingiz va Familiyangiz *</label>
+          <input type="text" id="td-user-name" required class="form-input" placeholder="Masalan: Sardor Rahimov">
+        </div>
+        <div class="form-group">
+          <label for="td-user-phone">Telefon raqamingiz *</label>
+          <input type="text" id="td-user-phone" required class="form-input" value="+998 90 ">
+        </div>
+        <div class="form-row two-col">
+          <div class="form-group">
+            <label for="td-date">Kunning sanasi *</label>
+            <input type="date" id="td-date" required class="form-input">
+          </div>
+          <div class="form-group">
+            <label for="td-time">Qulay vaqt *</label>
+            <select id="td-time" required class="form-input">
+              <option value="10:00">10:00 - 11:00</option>
+              <option value="12:00">12:00 - 13:00</option>
+              <option value="15:00">15:00 - 16:00</option>
+              <option value="17:00">17:00 - 18:00</option>
+            </select>
+          </div>
+        </div>
+        <button type="submit" class="btn-primary btn-full mt-3">
+          <i class="fa-solid fa-calendar-check"></i> Test-Drayvni Tasdiqlash
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= MAKE OFFER MODAL ================= -->
+  <div class="modal-overlay" id="make-offer-modal" style="display:none;">
+    <div class="modal-window glass-card modal-compact">
+      <button class="modal-close-btn" id="modal-close-offer-btn"><i class="fa-solid fa-xmark"></i></button>
+
+      <div class="modal-header-compact">
+        <i class="fa-solid fa-tags"></i>
+        <h3>Savdolashish & Narx Taklif Qilish</h3>
+        <p id="offer-car-title">Tanlangan avtomobil</p>
+      </div>
+
+      <form class="modal-form" id="make-offer-form">
+        <div class="current-listed-price-box">
+          <span>E'londagi narxi:</span>
+          <strong id="offer-original-price">$0</strong>
+        </div>
+
+        <div class="form-group">
+          <label for="offer-amount-input">Siz taklif qilayotgan narx ($ USD) *</label>
+          <input type="number" id="offer-amount-input" required min="1000" class="form-input" placeholder="Masalan: 26000">
+        </div>
+
+        <div class="form-group">
+          <label for="offer-sender-phone">Telefon raqamingiz *</label>
+          <input type="text" id="offer-sender-phone" required class="form-input" value="+998 90 ">
+        </div>
+
+        <div class="form-group">
+          <label for="offer-message">Sotuvchiga izoh / shartlar:</label>
+          <textarea id="offer-message" rows="2" class="form-input" placeholder="Agar naqd bersam shu narxga berolmaysizmi?"></textarea>
+        </div>
+
+        <button type="submit" class="btn-primary btn-full mt-2">
+          <i class="fa-solid fa-paper-plane"></i> Taklifni Yuborish
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= TOAST NOTIFICATION CONTAINER ================= -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
